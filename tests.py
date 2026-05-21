@@ -59,15 +59,20 @@ class TestBooksCollector:
         result = collector.get_books_with_specific_genre("Ужасы")
         assert "Ужасная книга" in result
 
-    # 8. Книги для детей (исправленный тест)
-    def test_get_books_for_children(self):
+    # 8а. Книги для детей: детские книги попадают в список
+    def test_get_books_for_children_includes_children_books(self):
         collector = BooksCollector()
         collector.add_new_book("Детская книга")
         collector.set_book_genre("Детская книга", "Мультфильмы")
+        children_books = collector.get_books_for_children()
+        assert "Детская книга" in children_books
+
+    # 8б. Книги для детей: книги с возрастным рейтингом не попадают в список
+    def test_get_books_for_children_excludes_age_restricted_books(self):
+        collector = BooksCollector()
         collector.add_new_book("Страшная книга")
         collector.set_book_genre("Страшная книга", "Ужасы")
         children_books = collector.get_books_for_children()
-        assert "Детская книга" in children_books
         assert "Страшная книга" not in children_books
 
     # 9. Добавление в избранное
